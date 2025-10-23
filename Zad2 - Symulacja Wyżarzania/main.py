@@ -1,9 +1,26 @@
 import random as r
-from cmath import sin, pi
-
+from math import exp, sin, pi
 
 def alfa(T):
     return T*ochlodzenie;
+
+def wybierz_funkcje():
+    wybor_f = 0
+    while wybor_f not in [1, 2]:
+        wybor_f = int(input("Wybierz funkcję do optymalizacji (1=f1, 2=f2): "))
+
+    if wybor_f == 1:
+        f_wybrana = f1
+        start_min = -150
+        start_max = 150
+        print(f"Przedział dla funkcji: [{start_min}, {start_max}]")
+    else:
+        f_wybrana = f2
+        start_min = -1
+        start_max = 2
+        print(f"Przedział dla funkcji: [{start_min}, {start_max}]")
+
+    return f_wybrana, start_min, start_max
 
 def menu():
     T0 = float(input("Podaj temperaturę początkową T0: "))
@@ -11,12 +28,14 @@ def menu():
     while ochl>=1 or ochl<0:
         ochl = float(input("Podaj wartosc ochladzania z zakresu [0,1]: "))
     l_e = 0
+    l_p = 0
     while l_e<1:
         l_e = int(input("Podaj liczbę epok: "))
     while l_p<1:
         l_p = int(input("Podaj liczbę prób: "))
 
     return T0, l_e, l_p, ochl
+
 
 #funkcja rozdzial 3 przyklad 1
 def f1(x):
@@ -31,18 +50,38 @@ def f1(x):
 def f2(x):
     return x*sin(10*pi*x)+1
 
+def P(rozw, rozw2, T):
+    if(T==0):
+        return 0.0
+
+    return exp((f(rozw2)-f(rozw))/T)
+
 T, l_epok, l_prob, ochlodzenie = menu()
-rozw = r.uniform(-10, 10)
-print("Wylosowane pierwsze rozwiazanie =", rozw)
-k = 1 #stała Boltzmana - DO ZMIANY
+f, start, koniec = wybierz_funkcje()
+rozw = r.uniform(start, koniec)
+k = 1
 
 i=0
-j=0
 while i<l_epok:
+    j = 0
     while j<l_prob:
+        p_start = rozw-T
+        p_koniec = rozw+T
+        if(rozw-T < start):
+            p_start = start
+        if(rozw+T>koniec):
+            p_koniec = koniec
+
+        pom = r.uniform(p_start,p_koniec)
+        if(f(pom)>f(rozw)):
+            rozw = pom
+        else:
+            p = r.uniform(0,1)
+            if(P(rozw,pom,T)>p):
+                rozw = pom
         j+=1
     T=alfa(T)
     i+=1
 
-print(rozw)
-print(f2(1))
+print("x = ", rozw)
+print("f(x)", f(rozw))
