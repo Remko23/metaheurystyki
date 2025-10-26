@@ -25,15 +25,14 @@ def wybierz_funkcje():
 def menu():
     T0 = float(input("Podaj temperaturę początkową T0: "))
     ochl = 1
-    while ochl>=1 or ochl<0:
-        ochl = float(input("Podaj wartosc ochladzania z zakresu [0,1]: "))
+    while ochl>=1 or ochl<=0:
+        ochl = float(input("Podaj wartosc ochladzania z zakresu (0,1): "))
     l_e = 0
     l_p = 0
     while l_e<1:
         l_e = int(input("Podaj liczbę epok: "))
     while l_p<1:
         l_p = int(input("Podaj liczbę prób: "))
-
     return T0, l_e, l_p, ochl
 
 
@@ -50,16 +49,16 @@ def f1(x):
 def f2(x):
     return x*sin(10*pi*x)+1
 
-def P(rozw, rozw2, T):
+def P(rozw, rozw2, T, k):
     if(T==0):
         return 0.0
 
-    return exp((f(rozw2)-f(rozw))/T)
+    return exp((f(rozw2)-f(rozw))/(k*T))
 
 T, l_epok, l_prob, ochlodzenie = menu()
 f, start, koniec = wybierz_funkcje()
 rozw = r.uniform(start, koniec)
-k = 1
+k = 0.1
 
 i=0
 while i<l_epok:
@@ -77,11 +76,11 @@ while i<l_epok:
             rozw = pom
         else:
             p = r.uniform(0,1)
-            if(P(rozw,pom,T)>p):
+            if(P(rozw,pom,T,k)>p):
                 rozw = pom
         j+=1
     T=alfa(T)
     i+=1
 
 print("x = ", rozw)
-print("f(x)", f(rozw))
+print("f(x) = ", f(rozw))
