@@ -1,7 +1,7 @@
 import random as r
 from math import exp, sin, pi
 
-def alfa(T):
+def alfa(T, ochlodzenie):
     return T*ochlodzenie;
 
 def wybierz_funkcje():
@@ -79,7 +79,7 @@ while i<l_epok:
             if(P(rozw,pom,T,k)>p):
                 rozw = pom
         j+=1
-    T=alfa(T)
+    T=alfa(T, ochlodzenie)
     i+=1
 
 print("x = ", rozw)
