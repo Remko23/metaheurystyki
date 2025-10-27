@@ -38,6 +38,8 @@ def menu():
 
 #funkcja rozdzial 3 przyklad 1
 def f1(x):
+    if x is None:
+        return -float("inf")
     if x<-95 and x>-105:
         return -2*abs(x+100)+10
     elif x<105 and x>95:
@@ -47,6 +49,8 @@ def f1(x):
 
 #funkcja rozdzial 4 przyklad 4
 def f2(x):
+    if x is None:
+        return -float("inf")
     return x*sin(10*pi*x)+1
 
 def P(rozw, rozw2, T, k):
@@ -58,12 +62,16 @@ def P(rozw, rozw2, T, k):
 T, l_epok, l_prob, ochlodzenie = menu()
 f, start, koniec = wybierz_funkcje()
 rozw = r.uniform(start, koniec)
+best_rozw = None
 k = 0.1
-
+l_it = 0
+best_it = 0
 i=0
+
 while i<l_epok:
     j = 0
     while j<l_prob:
+        l_it += 1
         p_start = rozw-T
         p_koniec = rozw+T
         if(rozw-T < start):
@@ -78,9 +86,13 @@ while i<l_epok:
             p = r.uniform(0,1)
             if(P(rozw,pom,T,k)>p):
                 rozw = pom
+        if(f(pom)>f(best_rozw)):
+            best_rozw = pom
+            best_it = l_it
         j+=1
     T=alfa(T, ochlodzenie)
     i+=1
 
-print("x = ", rozw)
-print("f(x) = ", f(rozw))
+print("x = ", best_rozw)
+print("f(x) = ", f(best_rozw))
+print("Liczba iteracji do znalezienia najlepszego rozw: ", best_it)
