@@ -38,8 +38,6 @@ def menu():
 
 #funkcja rozdzial 3 przyklad 1
 def f1(x):
-    if x is None:
-        return -float("inf")
     if x<-95 and x>-105:
         return -2*abs(x+100)+10
     elif x<105 and x>95:
@@ -49,8 +47,6 @@ def f1(x):
 
 #funkcja rozdzial 4 przyklad 4
 def f2(x):
-    if x is None:
-        return -float("inf")
     return x*sin(10*pi*x)+1
 
 def P(rozw, rozw2, T, k):
@@ -62,7 +58,7 @@ def P(rozw, rozw2, T, k):
 T, l_epok, l_prob, ochlodzenie = menu()
 f, start, koniec = wybierz_funkcje()
 rozw = r.uniform(start, koniec)
-best_rozw = None
+best_rozw = rozw
 k = 0.1
 l_it = 0
 best_it = 0
