@@ -64,6 +64,7 @@ l_it = 0
 best_it = 0
 i=0
 
+
 while i<l_epok:
     j = 0
     while j<l_prob:
