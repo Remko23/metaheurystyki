@@ -1,5 +1,6 @@
 import random as r
 from math import exp, sin, pi
+import time
 
 def alfa(T, ochlodzenie):
     return T*ochlodzenie;
@@ -103,6 +104,10 @@ i = 0
 print("-------------------------------------------------------")
 while i<5:
     print("-------------- Wyniki dla iteracji nr.", i+1, "--------------")
+    start_time = time.time()
     symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f)
+    end_time = time.time()
+    duration = end_time - start_time
+    print(f"Czas wykonania algorytmu wyniósł: {duration} sekund")
     print("-------------------------------------------------------")
     i+=1
