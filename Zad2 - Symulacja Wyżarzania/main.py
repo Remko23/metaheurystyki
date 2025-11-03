@@ -89,23 +89,23 @@ def symulacja_symulowanego_wyzarzania(f, start, koniec):
     results = []
     PARAMS = {
         'T': [50, 100, 200, 500, 1000],
-        'l_epok': [5, 20, 30, 50, 100],
-        'l_prob': [5, 20, 30, 50, 100],
-        'ochlodzenie': [0.7, 0.8, 0.9, 0.95, 0.99],
+        'M': [5, 20, 30, 50, 100],
+        'N': [5, 20, 30, 50, 100],
+        'alfa': [0.7, 0.8, 0.9, 0.95, 0.99],
         'k': [0.1, 0.3, 0.5, 0.8, 1]
     }
-
+    it = [0,0,0,0,0]
+    pom = 1
     # wykonujemy 5 razy dla tych samych parametrow, aby sprawdzić stabilność algorytmu dla wylosowywanych pierwszych rozwiazan
     while i < 5:
-
         start_time = time.time()
 
-        best_rozw, best_it, pierwsze_rozw = symulowane_wyzarzanie(PARAMS['l_epok'][0], PARAMS['l_prob'][0], start, koniec, PARAMS['T'][0], PARAMS['ochlodzenie'][0], PARAMS['k'][0],f)
+        best_rozw, best_it, pierwsze_rozw = symulowane_wyzarzanie(PARAMS['M'][0], PARAMS['N'][0], start, koniec, PARAMS['T'][0], PARAMS['alfa'][0], PARAMS['k'][0],f)
 
         end_time = time.time()
         duration = end_time - start_time
 
-        results.append([best_rozw, f(best_rozw), best_it, pierwsze_rozw, duration, i+1, PARAMS['T'][0], PARAMS['l_epok'][0], PARAMS['l_prob'][0], PARAMS['ochlodzenie'][0], PARAMS['k'][0]])
+        results.append([best_rozw, f(best_rozw), best_it, pierwsze_rozw, duration, i+1, PARAMS['T'][0], PARAMS['M'][0], PARAMS['N'][0], PARAMS['alfa'][0], PARAMS['k'][0]])
 
         # Format pliku wynikowego:
         # [rozw, wartosc f(rozw), liczba iteracji do znalezienia najlepszego, wylosowane pierwsze rozw, czas trwania, numer iteracji (1-5), T, M, N, alfa, k]
