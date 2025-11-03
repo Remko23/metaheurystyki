@@ -2,6 +2,7 @@ import random as r
 from math import exp, sin, pi
 import time
 import numpy as np
+import pandas as pd
 
 def alfa(T, ochlodzenie):
     return T*ochlodzenie;
@@ -9,7 +10,7 @@ def alfa(T, ochlodzenie):
 def wybierz_funkcje():
     wybor_f = 0
     while wybor_f not in [1, 2]:
-        wybor_f = int(input("Wybierz funkcję do optymalizacji (1=f1, 2=f2): "))
+        wybor_f = int(input("Wybierz funkcję do symulowania (1=f1, 2=f2): "))
 
     if wybor_f == 1:
         f_wybrana = f1
@@ -23,19 +24,6 @@ def wybierz_funkcje():
         print(f"Przedział dla funkcji: [{start_min}, {start_max}]")
 
     return f_wybrana, start_min, start_max
-
-def menu():
-    T0 = float(input("Podaj temperaturę początkową T0: "))
-    ochl = 1
-    while ochl>=1 or ochl<=0:
-        ochl = float(input("Podaj wartosc ochladzania z zakresu (0,1): "))
-    l_e = 0
-    l_p = 0
-    while l_e<1:
-        l_e = int(input("Podaj liczbę epok (M): "))
-    while l_p<1:
-        l_p = int(input("Podaj liczbę prób (N): "))
-    return T0, l_e, l_p, ochl
 
 
 #funkcja rozdzial 3 przyklad 1
@@ -90,26 +78,33 @@ def symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f):
         T = alfa(T, ochlodzenie)
         i += 1
 
-    print("x = ", best_rozw)
-    print("f(x) = ", f(best_rozw))
-    print("Liczba iteracji do znalezienia najlepszego rozw:", best_it)
-    print("Wylosowane pierwsze rozwiazanie:", pierwsze_rozw)
+    # print("x = ", best_rozw)
+    # print("f(x) = ", f(best_rozw))
+    # print("Liczba iteracji do znalezienia najlepszego rozw:", best_it)
+    # print("Wylosowane pierwsze rozwiazanie:", pierwsze_rozw)
     return best_rozw, best_it, pierwsze_rozw
 
 def symulacja_symulowanego_wyzarzania(f, start, koniec):
-    T, l_epok, l_prob, ochlodzenie = menu()
-    k = 0.1
     i = 0
     results = []
+    PARAMS = {
+        'T': [50, 100, 200, 500, 1000],
+        'l_epok': [5, 20, 30, 50, 100],
+        'l_prob': [5, 20, 30, 50, 100],
+        'ochlodzenie': [0.7, 0.8, 0.9, 0.95, 0.99],
+        'k': [0.1, 0.3, 0.5, 0.8, 1]
+    }
+    parameters = pd.DataFrame(PARAMS)
 
+    print(parameters)
     # wykonujemy 5 razy dla tych samych parametrow, aby sprawdzić stabilność algorytmu dla wylosowywanych pierwszych rozwiazan
     while i < 5:
         start_time = time.time()
-        best_rozw, best_it, pierwsze_rozw = symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f)
+        best_rozw, best_it, pierwsze_rozw = symulowane_wyzarzanie(PARAMS['l_epok'][0], PARAMS['l_prob'][0], start, koniec, PARAMS['T'][0], PARAMS['ochlodzenie'][0], PARAMS['k'][0],f)
         end_time = time.time()
         duration = end_time - start_time
-        print(f"Czas wykonania algorytmu wyniósł: {duration} sekund")
-        results.append([best_rozw, f(best_rozw), best_it, pierwsze_rozw, duration, i+1])
+        results.append([best_rozw, f(best_rozw), best_it, pierwsze_rozw, duration, i+1, PARAMS['T'][0], PARAMS['l_epok'][0], PARAMS['l_prob'][0], PARAMS['ochlodzenie'][0], PARAMS['k'][0]])
+
         # Format pliku wynikowego:
         # rozw, wartosc f w x, liczba iteracji do znalezienia najlepszego, wylosowane pierwsze rozw, czas trwania, numer iteracji (1-5)
         np.save('output.npy', np.array(results))
