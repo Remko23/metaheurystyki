@@ -1,6 +1,7 @@
 import random as r
 from math import exp, sin, pi
 import time
+import numpy as np
 
 def alfa(T, ochlodzenie):
     return T*ochlodzenie;
@@ -93,21 +94,27 @@ def symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f):
     print("f(x) = ", f(best_rozw))
     print("Liczba iteracji do znalezienia najlepszego rozw:", best_it)
     print("Wylosowane pierwsze rozwiazanie:", pierwsze_rozw)
+    return best_rozw, best_it, pierwsze_rozw
+
+def symulacja_symulowanego_wyzarzania(f, start, koniec):
+    T, l_epok, l_prob, ochlodzenie = menu()
+    k = 0.1
+    i = 0
+    results = []
+
+    # wykonujemy 5 razy dla tych samych parametrow, aby sprawdzić stabilność algorytmu dla wylosowywanych pierwszych rozwiazan
+    while i < 5:
+        start_time = time.time()
+        best_rozw, best_it, pierwsze_rozw = symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f)
+        end_time = time.time()
+        duration = end_time - start_time
+        print(f"Czas wykonania algorytmu wyniósł: {duration} sekund")
+        results.append([best_rozw, f(best_rozw), best_it, pierwsze_rozw, duration, i+1])
+        # Format pliku wynikowego:
+        # rozw, wartosc f w x, liczba iteracji do znalezienia najlepszego, wylosowane pierwsze rozw, czas trwania, numer iteracji (1-5)
+        np.save('output.npy', np.array(results))
+        i += 1
 
 
-T, l_epok, l_prob, ochlodzenie = menu()
 f, start, koniec = wybierz_funkcje()
-k = 0.1
-i = 0
-
-# wykonujemy 5 razy dla tych samych parametrow, aby sprawdzić stabilność algorytmu dla wylosowywanych pierwszych rozwiazan
-print("-------------------------------------------------------")
-while i<5:
-    print("-------------- Wyniki dla iteracji nr.", i+1, "--------------")
-    start_time = time.time()
-    symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f)
-    end_time = time.time()
-    duration = end_time - start_time
-    print(f"Czas wykonania algorytmu wyniósł: {duration} sekund")
-    print("-------------------------------------------------------")
-    i+=1
+symulacja_symulowanego_wyzarzania(f, start, koniec)
