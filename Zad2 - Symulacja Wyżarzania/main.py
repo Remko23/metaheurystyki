@@ -4,6 +4,9 @@ import time
 import numpy as np
 import json
 
+f1_maksimum = 100
+f2_maksimum = 1.850547
+
 def menu():
     print("1 - Podaj parametry i wykonaj dla nich symulowane wyzarzanie")
     print("2 - Przeprowadz symulację dla różnych wartości wybranego parametru")
@@ -49,7 +52,6 @@ def wybierz_funkcje():
         print(f"Przedział dla funkcji: [{start_min}, {start_max}]")
 
     return f_wybrana, start_min, start_max
-
 
 #funkcja rozdzial 3 przyklad 1
 def f1(x):
@@ -140,6 +142,7 @@ def symulacja_symulowanego_wyzarzania(f, start, koniec):
             best_rozw, best_it, pierwsze_rozw = symulowane_wyzarzanie(PARAMS['M'], PARAMS['N'], start, koniec, PARAMS['T'], PARAMS['alfa'], PARAMS['k'], f)
             end_time = time.time()
             duration = end_time - start_time
+            accuracy = abs(f1_maksimum - best_rozw) if f == f1 else abs(f2_maksimum-best_rozw)
             result_dict = {
                 'best_rozw': best_rozw,
                 'f(x)': f(best_rozw),
@@ -147,6 +150,7 @@ def symulacja_symulowanego_wyzarzania(f, start, koniec):
                 'poczatkowe_rozw': pierwsze_rozw,
                 'czas': duration,
                 'nr_iteracji': i + 1,
+                'dokladnosc': accuracy,
                 'parametry': {
                     'T': PARAMS['T'],
                     'M': PARAMS['M'],
@@ -159,7 +163,7 @@ def symulacja_symulowanego_wyzarzania(f, start, koniec):
             i += 1
 
         all_results_json.extend(current_param_results)
-        filename = f'{key}_output_f1.json' if f == f1 else f'{key}_output_f2.json'
+        filename = f'wyniki/{key}_output_f1.json' if f == f1 else f'wyniki/{key}_output_f2.json'
         with open(filename, 'w') as file:
             json.dump(all_results_json, file, indent=4)
         p+=1
