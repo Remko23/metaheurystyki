@@ -1,7 +1,6 @@
 import random as r
 from math import exp, sin, pi
 import time
-import numpy as np
 import json
 
 f1_maksimum = 100

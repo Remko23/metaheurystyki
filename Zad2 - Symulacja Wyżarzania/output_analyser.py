@@ -10,6 +10,7 @@ def wczytaj_dane_z_json(nazwa_pliku):
 
 def wykres_czasu(dane, parametr, f):
     plt.figure(figsize=(10, 6))
+    plt.yscale('log')
     sns.barplot(x=parametr, y='czas', hue='nr_iteracji', data=dane, errorbar='sd', palette='viridis')
     plt.title(f'Czas wykonania algorytmu wględem {parametr} dla {f}')
     plt.xlabel(f'Parametr {parametr}')
@@ -18,11 +19,12 @@ def wykres_czasu(dane, parametr, f):
     plt.legend(title='Numer iteracji', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout(rect=[0, 0, 0.9, 1])
     plt.savefig(f'wykresy/wykres_czasu_{parametr}_{f}.png')
-    # plt.show()
+    plt.show()
     plt.close()
 
 def wykres_dokladnosci(dane, parametr, f):
     plt.figure(figsize=(10, 6))
+    plt.yscale('log')
     sns.barplot(x=parametr, y='dokladnosc', hue='nr_iteracji', data=dane, errorbar='sd', palette='viridis')
     plt.title(f'Dokładność względem zmiany {parametr} dla {f}')
     plt.xlabel(f'Parametr {parametr}')
@@ -31,11 +33,12 @@ def wykres_dokladnosci(dane, parametr, f):
     plt.legend(title='Numer iteracji', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout(rect=[0, 0, 0.9, 1])
     plt.savefig(f'wykresy/wykres_dokladnosci_{parametr}_{f}.png')
-    # plt.show()
+    plt.show()
     plt.close()
 
 def wykres_iteracji(dane, parametr, f):
     plt.figure(figsize=(10, 6))
+    plt.yscale('log')
     sns.barplot(x=parametr, y='best_it', hue='nr_iteracji', data=dane, errorbar='sd', palette='viridis')
     plt.title(f'Liczba iteracji potrzebna w względem zmiany {parametr} dla {f}')
     plt.xlabel(f'Parametr {parametr}')
@@ -44,7 +47,7 @@ def wykres_iteracji(dane, parametr, f):
     plt.legend(title='Numer iteracji', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout(rect=[0, 0, 0.9, 1])
     plt.savefig(f'wykresy/wykres_iteracji_{parametr}_{f}.png')
-    # plt.show()
+    plt.show()
     plt.close()
 
 def narysuj_wykresy(plik):
