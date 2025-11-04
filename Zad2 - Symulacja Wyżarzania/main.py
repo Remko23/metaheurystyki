@@ -109,7 +109,6 @@ def symulowane_wyzarzanie(l_epok, l_prob, start, koniec, T, ochlodzenie, k, f):
     return best_rozw, best_it, pierwsze_rozw
 
 def symulacja_symulowanego_wyzarzania(f, start, koniec):
-    i = 0
     all_results_json = []
     par = -1
     while par not in [0, 1, 2, 3, 4]:
@@ -134,6 +133,7 @@ def symulacja_symulowanego_wyzarzania(f, start, koniec):
     while p < len(VALUES[key]):
         PARAMS[key] = VALUES[key][p]
         current_param_results = []
+        i=0
         # wykonujemy 5 razy dla tych samych parametrow, aby sprawdzić stabilność algorytmu dla wylosowywanych pierwszych rozwiazan
         while i < 5:
             start_time = time.time()
