@@ -1,0 +1,77 @@
+[
+    {
+        "best_rozw": 42.68043600648949,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 42.68043600648949,
+        "czas": 0.0,
+        "nr_iteracji": 1,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": 39.041927250074025,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 39.041927250074025,
+        "czas": 0.0,
+        "nr_iteracji": 2,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": -9.27634023622619,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": -9.27634023622619,
+        "czas": 0.0,
+        "nr_iteracji": 3,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": 8.244755354791664,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 8.244755354791664,
+        "czas": 0.0,
+        "nr_iteracji": 4,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": 67.6061384735356,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 67.6061384735356,
+        "czas": 0.0,
+        "nr_iteracji": 5,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    }
+]

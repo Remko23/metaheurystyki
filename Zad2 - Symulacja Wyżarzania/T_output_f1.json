@@ -1,0 +1,77 @@
+[
+    {
+        "best_rozw": 129.62995411470956,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 129.62995411470956,
+        "czas": 0.0,
+        "nr_iteracji": 1,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": -148.7063402521445,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": -148.7063402521445,
+        "czas": 0.0,
+        "nr_iteracji": 2,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": 64.6557778417693,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 64.6557778417693,
+        "czas": 0.0,
+        "nr_iteracji": 3,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": 39.43321269462942,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": 39.43321269462942,
+        "czas": 0.0,
+        "nr_iteracji": 4,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    },
+    {
+        "best_rozw": -138.72790638703762,
+        "f(x)": 0,
+        "best_it": 0,
+        "poczatkowe_rozw": -138.72790638703762,
+        "czas": 0.0,
+        "nr_iteracji": 5,
+        "parametry": {
+            "T": 20,
+            "M": 5,
+            "N": 5,
+            "alfa": 0.5,
+            "k": 0.1
+        }
+    }
+]
