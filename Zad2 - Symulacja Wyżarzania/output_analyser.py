@@ -26,7 +26,7 @@ def wykres_dokladnosci(dane, parametr, f):
     plt.figure(figsize=(10, 6))
     plt.yscale('log')
     sns.barplot(x=parametr, y='dokladnosc', hue='nr_iteracji', data=dane, errorbar='sd', palette='viridis')
-    plt.title(f'Dokładność względem zmiany {parametr} dla {f}')
+    plt.title(f'Błąd bezwzględny względem zmiany {parametr} dla {f}')
     plt.xlabel(f'Parametr {parametr}')
     plt.ylabel('Dokładność')
     plt.grid(axis='y', linestyle='--')
