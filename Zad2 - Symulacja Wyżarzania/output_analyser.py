@@ -87,4 +87,3 @@ narysuj_wykresy('wyniki/M_output_f2.json')
 narysuj_wykresy('wyniki/N_output_f2.json')
 narysuj_wykresy('wyniki/k_output_f2.json')
 narysuj_wykresy('wyniki/alfa_output_f2.json')
-

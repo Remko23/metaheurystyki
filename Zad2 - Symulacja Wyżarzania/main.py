@@ -12,8 +12,11 @@ def menu():
     wybor = int(input("Twój wybór: "))
     if wybor == 1:
         T,M,N,ochl,k = pobierz_parametry()
-        best, bestit, wyl_rozw = symulowane_wyzarzanie(M, N, start, koniec, T, ochl, k ,f)
-        print(f"x = {best}\nf(x) = {f(best)}\nIteracji do znalezienia rozw = {bestit}\nWylosowane pierwsze rozwiazanie = {wyl_rozw}")
+        a = 0
+        while a < 5:
+            best, bestit, wyl_rozw = symulowane_wyzarzanie(M, N, start, koniec, T, ochl, k ,f)
+            print(f"x = {best}\nf(x) = {f(best)}\nIteracji do znalezienia rozw = {bestit}\nWylosowane pierwsze rozwiazanie = {wyl_rozw}\nBłąd bezwzgłędny = {abs(best-f1_maksimum) if f==f1 else abs(best-f2_maksimum)}")
+            a+=1
     elif wybor == 2:
         symulacja_symulowanego_wyzarzania(f, start, koniec)
 
