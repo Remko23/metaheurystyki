@@ -112,6 +112,8 @@ def symulation(Pc, Pm, N, T):
     population, grading_list = initialize_population(N)
 
     best = max(grading_list)
+    best_index = grading_list.index(best)
+    best_chromosome = population[best_index][:]
     worst = min(grading_list)
 
     while i < T:
@@ -119,6 +121,7 @@ def symulation(Pc, Pm, N, T):
         population, grading_list = crossing(parents, Pc, Pm)
 
         new_best = max(grading_list)
+        new_best_index = grading_list.index(new_best)
         new_worst = min(grading_list)
         avg = sum(grading_list) / len(grading_list)
 
@@ -126,12 +129,14 @@ def symulation(Pc, Pm, N, T):
 
         if new_best > best:
             best = new_best
+            best_index = new_best_index
+            best_chromosome = population[best_index][:]
         if new_worst < worst:
             worst = new_worst
 
 
         i += 1
-    return best, worst, avg_solution
+    return best, worst, avg_solution, best_chromosome
 
 
 def T1_experiment():
@@ -140,8 +145,9 @@ def T1_experiment():
     Pm_values = [0.01, 0.05, 0.1],
     N_values = [50, 100, 200],
     T = 200,
-    filename = 'T1_results'
+    filename = 'T1_results.csv'
     )
+
 
 def T2_experiment():
     run_experiment(
@@ -149,8 +155,9 @@ def T2_experiment():
     Pm_values = [0.01, 0.05, 0.1],
     N_values = [50, 100, 200],
     T = 500,
-    filename = 'T2_results'
+    filename = 'T2_results.csv'
     )
+
 
 def T3_experiment():
     run_experiment(
@@ -158,9 +165,8 @@ def T3_experiment():
     Pm_values = [0.01, 0.05, 0.1],
     N_values = [50, 100, 200],
     T = 1000,
-    filename = 'T3_results'
+    filename = 'T3_results.csv'
     )
-
 
 
 '''Funkcja menu sluzy do obslugi symulacji. W niej odbywa sie przypisanie parametrow
@@ -180,16 +186,18 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
                 run_worst = []
                 run_time = []
                 run_avg = []
+                run_best_chrom = []
 
                 for run in range(runs_counter):
                     start = time.time()
-                    best, worst, avg = symulation(pc, pm, n, T)
+                    best, worst, avg, best_chromosome = symulation(pc, pm, n, T)
                     end = time.time()
 
                     run_best.append(best)
                     run_worst.append(worst)
                     run_time.append(round(end - start, 5))
                     run_avg.append(avg)
+                    run_best_chrom.append(best_chromosome)
 
                     print(f"  🔸 Run {run + 1}: best={best}, worst={worst}, time={end - start:.2f}s")
 
@@ -202,6 +210,7 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
                     'Time': run_time,
                     'best': run_best,
                     'worst': run_worst,
+                    'best_chrom': run_best_chrom,
                     'avg': run_avg,
                 })
     df = pd.DataFrame(results)
@@ -210,9 +219,11 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
 
     return df
 
-#T2_experiment()
-#T3_experiment()
-#T1_experiment()
+
+T1_experiment()
+T2_experiment()
+T3_experiment()
+
 
 #test1, test2 = initialize_population(20)
 #parents = parents_selection(test1, test2)
