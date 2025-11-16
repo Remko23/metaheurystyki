@@ -134,21 +134,46 @@ def symulation(Pc, Pm, N, T):
     return best, worst, avg_solution
 
 
+def T1_experiment():
+    run_experiment(
+    Pc_values = [0.6, 0.8, 1.0],
+    Pm_values = [0.01, 0.05, 0.1],
+    N_values = [50, 100, 200],
+    T = 200,
+    filename = 'T1_results'
+    )
+
+def T2_experiment():
+    run_experiment(
+    Pc_values = [0.6, 0.8, 1.0],
+    Pm_values = [0.01, 0.05, 0.1],
+    N_values = [50, 100, 200],
+    T = 500,
+    filename = 'T2_results'
+    )
+
+def T3_experiment():
+    run_experiment(
+    Pc_values = [0.6, 0.8, 1.0],
+    Pm_values = [0.01, 0.05, 0.1],
+    N_values = [50, 100, 200],
+    T = 1000,
+    filename = 'T3_results'
+    )
+
+
+
 '''Funkcja menu sluzy do obslugi symulacji. W niej odbywa sie przypisanie parametrow
     oraz zapis do pliku .csv'''
-def menu():
+def run_experiment(Pc_values, Pm_values, N_values, T, filename):
     results = []
-
-    Pc_values = [0.6, 0.8, 1.0]
-    Pm_values = [0.01, 0.05, 0.1]
-    N_values = [50, 100, 200]
-    T = 200
 
     runs_counter = 5
 
-    for pc in Pc_values:
-        for pm in Pm_values:
-            for n in N_values:
+
+    for pm in Pm_values:
+        for n in N_values:
+            for pc in Pc_values:
                 print(f"\n🔹 Testuję kombinację: Pc={pc}, Pm={pm}, N={n}, T={T}")
 
                 run_best = []
@@ -163,7 +188,7 @@ def menu():
 
                     run_best.append(best)
                     run_worst.append(worst)
-                    run_time.append(end - start)
+                    run_time.append(round(end - start, 5))
                     run_avg.append(avg)
 
                     print(f"  🔸 Run {run + 1}: best={best}, worst={worst}, time={end - start:.2f}s")
@@ -174,18 +199,21 @@ def menu():
                     'Pm': pm,
                     'N': n,
                     'T': T,
+                    'Time': run_time,
                     'best': run_best,
                     'worst': run_worst,
                     'avg': run_avg,
                 })
     df = pd.DataFrame(results)
-    df.to_csv('simulation_results.csv', index=False)
+    df.to_csv(filename, index=False, sep=';')
     print('Zapisano ES?')
 
     return df
 
-df = menu()
-print(df)
+#T2_experiment()
+#T3_experiment()
+#T1_experiment()
+
 #test1, test2 = initialize_population(20)
 #parents = parents_selection(test1, test2)
 #new_population = crossing(parents, 0.6, 0.05)
