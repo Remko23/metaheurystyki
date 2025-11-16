@@ -196,12 +196,11 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
                     run_best.append(best)
                     run_worst.append(worst)
                     run_time.append(round(end - start, 5))
-                    run_avg.append(avg)
+                    run_avg.append(sum(avg)/len(avg))
                     run_best_chrom.append(best_chromosome)
 
                     print(f"  🔸 Run {run + 1}: best={best}, worst={worst}, time={end - start:.2f}s")
 
-                # Zapisz wynik do listy
                 results.append({
                     'Pc': pc,
                     'Pm': pm,
