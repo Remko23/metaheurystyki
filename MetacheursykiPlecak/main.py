@@ -10,6 +10,7 @@ value = [int(v.replace(" ","")) for v in value]
 wv_ratio = [w / v for w, v in zip(weight, value)]
 knapsack_limit = 6404180
 
+
 '''Generowanie pojedynczych chromosomow. Zwracamy liste z wartosciami True/False'''
 def initialize_chromosome():
     is_in = [False for _ in range(len(wv_ratio))]
@@ -109,6 +110,7 @@ def mutation(child, Pm):
 def symulation(Pc, Pm, N, T):
     i = 0
     avg_solution = []
+    best_solutions = []
     population, grading_list = initialize_population(N)
 
     best = max(grading_list)
@@ -134,9 +136,9 @@ def symulation(Pc, Pm, N, T):
         if new_worst < worst:
             worst = new_worst
 
-
+        best_solutions.append(best)
         i += 1
-    return best, worst, avg_solution, best_chromosome
+    return best, worst, avg_solution, best_chromosome, best_solutions
 
 
 def T1_experiment():
@@ -187,10 +189,11 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
                 run_time = []
                 run_avg = []
                 run_best_chrom = []
+                run_best_solutions = []
 
                 for run in range(runs_counter):
                     start = time.time()
-                    best, worst, avg, best_chromosome = symulation(pc, pm, n, T)
+                    best, worst, avg, best_chromosome, best_solutions = symulation(pc, pm, n, T)
                     end = time.time()
 
                     run_best.append(best)
@@ -198,6 +201,7 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
                     run_time.append(round(end - start, 5))
                     run_avg.append(sum(avg)/len(avg))
                     run_best_chrom.append(best_chromosome)
+                    run_best_solutions.append(best_solutions)
 
                     print(f"  🔸 Run {run + 1}: best={best}, worst={worst}, time={end - start:.2f}s")
 
@@ -211,6 +215,7 @@ def run_experiment(Pc_values, Pm_values, N_values, T, filename):
                     'worst': run_worst,
                     'best_chrom': run_best_chrom,
                     'avg': run_avg,
+                    'bst_sol': run_best_solutions
                 })
     df = pd.DataFrame(results)
     df.to_csv(filename, index=False, sep=';')
@@ -224,15 +229,7 @@ T2_experiment()
 T3_experiment()
 
 
-#test1, test2 = initialize_population(20)
-#parents = parents_selection(test1, test2)
-#new_population = crossing(parents, 0.6, 0.05)
 
-#symulation(0.8, 0.1, 100,200)
-
-#print("Nowe dzieci:")
-#for child in new_population:
-#    print(child)
 
 
 

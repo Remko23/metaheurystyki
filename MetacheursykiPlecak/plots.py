@@ -32,6 +32,7 @@ def load_data_from_file(filename):
     data['worst'] = data['worst'].apply(lambda x: ast.literal_eval(x))
     data['best_chrom'] = data['best_chrom'].apply(lambda x: ast.literal_eval(x))
     data['avg'] = data['avg'].apply(lambda x: ast.literal_eval(x))
+    data['bst_sol'] = data['bst_sol'].apply(lambda x: ast.literal_eval(x))
     return data
 
 
@@ -102,6 +103,23 @@ def avg_pc_plot(data):
     plt.show()
 
 
+def best_solutions_plot(row, T):
+    plt.figure(figsize=(12, 6))
+    plt.yscale('log')
+
+    for i, run_values in enumerate(row['bst_sol']):
+        plt.plot(range(len(run_values)), run_values, linewidth=1, label=f"Run {i + 1}")
+
+    plt.xlabel("Iteracja")
+    plt.ylabel("Wartość najlepszego rozwiązania")
+    plt.title(f"Zmiana najlepszego rozwiązania w czasie (T = {T}) | Pc={row['Pc']}, Pm={row['Pm']}, N={row['N']}")
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
+
 def extract_time_data(data):
     rows = []
 
@@ -164,6 +182,21 @@ def extract_best_items_data(data):
     return pd.DataFrame(rows)
 
 
+def extract_best_solutions_data(data):
+    rows = []
+
+    for _, row in data.iterrows():
+            rows.append({
+                'Pc': row['Pc'],
+                'Pm': row['Pm'],
+                'N': row['N'],
+                'T': row['T'],
+                'bst_sol': row['bst_sol']
+            })
+
+    return pd.DataFrame(rows)
+
+
 def decode_chromosome(best_chromosome, items):
     chosen_items = items[best_chromosome]
 
@@ -191,6 +224,7 @@ def items_count(best_items, items):
 
 
 
+
 def draw_plots():
     T1_data = load_data_from_file('T1_results.csv')
     T2_data = load_data_from_file('T2_results.csv')
@@ -199,14 +233,27 @@ def draw_plots():
     extracted_best_t1 = extract_best_data(T1_data)
     extracted_avg_t1 = extract_avg_data(T1_data)
     extracted_best_items_t1 = extract_best_items_data(T1_data)
+    extracted_best_solutions_t1 = extract_best_solutions_data(T1_data)
     extracted_time_t2 = extract_time_data(T2_data)
     extracted_best_t2 = extract_best_data(T2_data)
     extracted_avg_t2 = extract_avg_data(T2_data)
     extracted_best_items_t2 = extract_best_items_data(T2_data)
+    extracted_best_solutions_t2 = extract_best_solutions_data(T2_data)
     extracted_time_t3 = extract_time_data(T3_data)
     extracted_best_t3 = extract_best_data(T3_data)
     extracted_avg_t3 = extract_avg_data(T3_data)
     extracted_best_items_t3 = extract_best_items_data(T3_data)
+    extracted_best_solutions_t3 = extract_best_solutions_data(T3_data)
+
+    for idx, row in extracted_best_solutions_t1.iterrows():
+        best_solutions_plot(row, 200)
+
+    for idx, row in extracted_best_solutions_t2.iterrows():
+        best_solutions_plot(row, 500)
+
+    for idx, row in extracted_best_solutions_t3.iterrows():
+        best_solutions_plot(row, 1000)
+
 
     items = load_items()
 
