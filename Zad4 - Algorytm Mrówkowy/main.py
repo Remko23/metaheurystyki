@@ -1,3 +1,5 @@
+from random import randint
+
 import Ant
 import pandas as pd
 import numpy as np
@@ -12,21 +14,54 @@ data = pd.read_csv(
     comment='['
 )
 
-PARAMS = pd.read_csv('data/PARAMS.txt', sep=r'\s+')
+# wczytanie parametrow z pliku
+# PARAMS = pd.read_csv('data/PARAMS.txt', sep=r'\s+')
 
-""" Funkcja zwraca macierz, w której górna część to odległości między atrakcjami, a dolna część to ślady feromonowe (przy inicjalizacji ustawione na 0)"""
-def buildMatrix(data):
+# poki co wstepne wartosci parametrow
+m = 50
+p_random = 0.01
+T = 100
+rho = 0.1
+alpha = 1.0
+beta = 1.0
+
+
+'''Funkcja zwraca macierz, w której górna część to odległości między atrakcjami, 
+    a dolna część to ślady feromonowe (przy inicjalizacji ustawione na 0)'''
+def initializeMatrix(data):
     N = len(data)
     matrix = [[0.0 for _ in range(N)] for _ in range(N)]
 
-    print(matrix)
     for i in range(N):
         for j in range(N):
+            # przekatna macierzy bedzie nieuzywana
             if i == j:
-                matrix[i][j] = np.nan
+                continue
             elif i < j:
+                # górna czesc macierzy będzie mieć odległosci miedzy atrakcjami
                 matrix[i][j] = np.sqrt(np.power(data['X'][i] - data['X'][j], 2) + np.power(data['Y'][i] - data['Y'][j], 2))
+            # dolna czesc (slady feromonowe) ustawiamy na 1
+            elif i > j:
+                matrix[i][j] = 1
 
-    return matrix
+    numpy_matrix = np.array(matrix)
+    return numpy_matrix
 
-matrix = buildMatrix(data)
+
+''' Funkcja zwraca kolonię mrówek'''
+def initializeAntColony(m):
+    colony = []
+    matrix = initializeMatrix(data)
+    # print(matrix)
+    for i in range(m):
+        colony.append(Ant.Ant(randint(0,len(data)-1), matrix,alpha, beta))
+    return colony
+
+
+''' Funkcja wywołuje funkcję wyboru następnej atrakcji dla każdej mrówki z kolonii'''
+def nextAttraction(colony):
+    for ant in colony:
+        ant.nextAttraction()
+    return colony
+
+colony = initializeAntColony(m)
