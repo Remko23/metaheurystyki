@@ -39,7 +39,7 @@ class Ant:
 
         # wybor losowej atrakcji
         if random.random() < p_random:
-            next = random.choice(self.unvisited)
+            next = random.choice(list(self.unvisited))
         #wybór względem śladu feromonów i heurystyki odległości
         else:
             i = self.attraction_id

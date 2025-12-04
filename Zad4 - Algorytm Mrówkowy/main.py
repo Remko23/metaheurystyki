@@ -64,10 +64,11 @@ def nextAttraction(colony):
         ant.nextAttraction(p_random)
     return colony
 
-colony = initializeAntColony(1)
+colony = initializeAntColony(m)
 
 # TEST
 for ant in colony:
+    print('-----------------------------------------------')
     print(f'Pierwsza atrakcja mrowki: {ant.attraction_id}')
     while ant.nextAttraction(p_random) != None:
         print(f'Aktualna atrakcja mrowki: {ant.attraction_id}')
