@@ -8,6 +8,7 @@ import numpy as np
      zbiór atrakcji pozostałych do odwiedzenia,
      listę odwiedzonych atrakcji w ramach wędrówki
      długość aktualnej wędrówki,
+     listę odwiedzonych atrakcji w ramach najlepszej wędrówki
      długość najkrótszej wędrówki'''
 class Ant:
     def __init__(self, attraction_id, attractions_number):
@@ -16,11 +17,17 @@ class Ant:
 
         self.unvisited = set(range(attractions_number))
         self.unvisited.remove(self.start_point)
-        self.tour = [attraction_id]
-        self.track_length = 0.0
-        self.best_track_length = None
 
-    ''' Funkcja wyboru nastepnej atrakcji do odwiedzenia przez mrowke '''
+        self.track_length = 0.0
+        self.tour = [attraction_id]
+
+        self.best_track_length = None
+        self.best_tour = []
+
+
+    ''' Funkcja dokonuje wyboru nastepnej atrakcji do odwiedzenia przez mrowke, 
+        na podstawie odpowiedniego wzoru oraz selekcji ruletkowej,
+        jesli mrówka odwiedzila wszystkie atrakcje to zwracamy None'''
     def nextAttraction(self, matrix, p_random, alpha, beta):
         # odwiedzono wszystkie atrakcje
         if not self.unvisited:
@@ -56,9 +63,15 @@ class Ant:
         self.track_length += distance
         return next
 
+    '''aktualizacja mrówki przed kolejnym wyruszeniem w trasę
+        sprawdzamy czy nie poprawiono najlepszej ścieżki, 
+        oraz przygotowujemy zmienne przechowujące: dlugosc aktualnej drogi, punkt początkowy, 
+        aktualną atrakcję, zbiór nieodwiedzonych i listę odwiedzonych atrakcji do kolejnej wędrówki,
+        podobnie jak przy inicjalizacji mrówki'''
     def updateAnt(self, attraction_id, attractions_number):
         if self.best_track_length is None or self.track_length < self.best_track_length:
             self.best_track_length = self.track_length
+            self.best_tour = self.tour
 
         self.track_length = 0.0
         self.start_point = attraction_id
