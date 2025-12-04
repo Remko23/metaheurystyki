@@ -11,7 +11,7 @@ def menu():
     attractions_nr = [32, 80]
     wybor_pliku = 0
     while wybor_pliku not in [1, 2]:
-        wybor_pliku = int(input(f'Wybierz liczbę atrakcji: \n 1 - 32 (plik: A-n32-k5.txt) \n 2 - 80 (plik: A-n80-k10.txt)\n'))
+        wybor_pliku = int(input(f'Wybierz plik danych do eksperymentu: \n 1 - A-n32-k5.txt \n 2 - A-n80-k10.txt\n'))
     data = pd.read_csv(
         files_name[wybor_pliku-1],
         sep=r'\s+',
@@ -100,7 +100,6 @@ PARAMS = {
 }
 
 
-all_results_json = []
 stats_json = []
 
 data, attractions_nr = menu()
@@ -109,6 +108,8 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
     print(f'------------------------------------------------------------------------\n'
           f'          Badanie wpływu parametru: {param}: ({param} = {VALUES[param]})  '
           f'\n------------------------------------------------------------------------')
+
+    all_results_json = []
     for p in range(0, len(VALUES[param])):
         PARAMS[param] = VALUES[param][p]
         bests = []
@@ -175,12 +176,12 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
 
 
         all_results_json.extend(current_params_results)
-        filename = f'wyniki/{param}-output-{attractions_nr}.json'
+        filename = f'results/{param}-output-{attractions_nr}.json'
         with open(filename, 'w') as file:
             json.dump(all_results_json, file, indent=4)
 
         stats_json.extend(stats)
-        filename = f'wyniki/STATS-{attractions_nr}.json'
+        filename = f'results/STATS-{attractions_nr}.json'
         with open(filename, 'w') as file:
             json.dump(stats_json, file, indent=4)
 
