@@ -1,9 +1,9 @@
 from random import randint
-
 import Ant
 import json
 import numpy as np
 import pandas as pd
+import time
 
 
 def menu():
@@ -117,6 +117,7 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
 
         print(f'PARAMS: {PARAMS}')
         for i in range(1,6):
+            start_time = time.time()
             colony, matrix = initializeAntColony(PARAMS['m'])
 
             for j in range (1, PARAMS['T']+1):
@@ -128,10 +129,14 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
 
             best_track = float('inf')
             best_tour = []
+            ant_bests = []
             for ant in colony:
+                ant_bests.append(ant.best_track_length)
                 if ant.best_track_length < best_track:
                     best_track = ant.best_track_length
                     best_tour = ant.best_tour
+            end_time = time.time()
+            duration = end_time - start_time
             bests.append(best_track)
             results = {
                     'itteration_nr': i,
@@ -144,9 +149,12 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
                         'rho': PARAMS['rho']
                     },
                     'best_track': best_track,
-                    'best_tour': best_tour
+                    'best_tour': best_tour,
+                    'mean_track': np.mean(ant_bests),
+                    'worst_track': np.max(ant_bests),
+                    'duration': duration,
             }
-            print(f'Iteracja nr. {i}, najkrótsza trasa: {best_track}')
+            print(f'Iteracja nr. {i}, najkrótsza trasa: {best_track}, czas wykonania: {duration}')
             current_params_results.append(results)
             statistics = {
                 'parameters': {
