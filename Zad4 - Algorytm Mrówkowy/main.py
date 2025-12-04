@@ -4,26 +4,20 @@ import Ant
 import pandas as pd
 import numpy as np
 
-files_name=['data/A-n32-k5.txt', 'data/A-n80-k10.txt']
 
-data = pd.read_csv(
-    files_name[0],
-    sep=r'\s+',
-    header=None,
-    names=['attractionID', 'X', 'Y'],
-    comment='['
-)
-
-# wczytanie parametrow z pliku
-# PARAMS = pd.read_csv('data/PARAMS.txt', sep=r'\s+')
-
-# poki co wstepne wartosci parametrow
-m = 50
-p_random = 0.01
-T = 100
-rho = 0.1
-alpha = 1.0
-beta = 1.0
+def menu():
+    files_name = ['data/A-n32-k5.txt', 'data/A-n80-k10.txt']
+    wybor_pliku = 0
+    while wybor_pliku != 1 and wybor_pliku != 2:
+        wybor_pliku = int(input(f'Wybierz liczbę atrakcji: \n 1 - 32 \n 2 - 80\n'))
+    data = pd.read_csv(
+        files_name[wybor_pliku-1],
+        sep=r'\s+',
+        header=None,
+        names=['attractionID', 'X', 'Y'],
+        comment='['
+    )
+    return data
 
 
 '''Funkcja zwraca macierz, w której górna część to odległości między atrakcjami, 
@@ -48,29 +42,64 @@ def initializeMatrix(data):
     return numpy_matrix
 
 
-''' Funkcja zwraca kolonię mrówek'''
+''' Funkcja inicjalizuje i zwraca kolonię mrówek'''
 def initializeAntColony(m):
     colony = []
     matrix = initializeMatrix(data)
     # print(matrix)
     for i in range(m):
-        colony.append(Ant.Ant(randint(0,len(data)-1), matrix,alpha, beta))
-    return colony
+        colony.append(Ant.Ant(randint(0,len(data)-1), len(matrix)))
+    return colony, matrix
 
 
-''' Funkcja wywołuje funkcję wyboru następnej atrakcji dla każdej mrówki z kolonii'''
-def nextAttraction(colony):
+def pheromoneUpdate(colony, matrix, rho):
+    # wyparowywanie
+    N = len(matrix)
+    for i in range(N):
+        for j in range(i):
+            matrix[i][j] *= (1-rho)
+
+    # dodawanie
     for ant in colony:
-        ant.nextAttraction(p_random)
-    return colony
+        trail = 1/ant.track_length
+        for k in range(N-1):
+            i = ant.tour[k]
+            j = ant.tour[k+1]
+            matrix[max(i,j)][min(i,j)] += trail
 
-colony = initializeAntColony(m)
+    return matrix
+
+
+def colonyUpdate(colony, matrix):
+    for ant in colony:
+        ant.updateAnt(randint(0,len(data)-1), len(matrix))
+
 
 # TEST
+
+data = menu()
+
+# wczytanie parametrow z pliku
+# PARAMS = pd.read_csv('data/PARAMS.txt', sep=r'\s+')
+
+# poki co wstepne wartosci parametrow
+m = 50
+p_random = 0.01
+T = 100
+rho = 0.1
+alpha = 1.0
+beta = 1.0
+
+
+colony, matrix = initializeAntColony(m)
+
 for ant in colony:
     print('-----------------------------------------------')
     print(f'Pierwsza atrakcja mrowki: {ant.attraction_id}')
-    while ant.nextAttraction(p_random) != None:
+    while ant.nextAttraction(matrix, p_random, alpha, beta) != None:
         print(f'Aktualna atrakcja mrowki: {ant.attraction_id}')
+    print(f'Koniec trasy, dlugosc: {ant.track_length}')
 
-print(f'Koniec trasy, dlugosc: {ant.track_length}')
+
+matrix = pheromoneUpdate(colony, matrix, rho)
+colonyUpdate(colony, matrix)
