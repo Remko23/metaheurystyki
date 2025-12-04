@@ -61,7 +61,15 @@ def initializeAntColony(m):
 ''' Funkcja wywołuje funkcję wyboru następnej atrakcji dla każdej mrówki z kolonii'''
 def nextAttraction(colony):
     for ant in colony:
-        ant.nextAttraction()
+        ant.nextAttraction(p_random)
     return colony
 
-colony = initializeAntColony(m)
+colony = initializeAntColony(1)
+
+# TEST
+for ant in colony:
+    print(f'Pierwsza atrakcja mrowki: {ant.attraction_id}')
+    while ant.nextAttraction(p_random) != None:
+        print(f'Aktualna atrakcja mrowki: {ant.attraction_id}')
+
+print(f'Koniec trasy, dlugosc: {ant.track_length}')
