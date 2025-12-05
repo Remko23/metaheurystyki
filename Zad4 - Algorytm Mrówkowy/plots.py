@@ -101,21 +101,43 @@ def timePlot(filename):
     plt.show()
 
 
-def drawAllPlots(filename):
-    boxPlot(filename)
-    meanPlot(filename)
-    timePlot(filename)
+def drawAllPlots(results_file_names, stats_files):
+    for filename in results_file_names:
+        boxPlot(filename)
+        meanPlot(filename)
+        timePlot(filename)
+    drawBestMap()
 
 
-drawAllPlots('results/alpha-output-32.json')
-drawAllPlots('results/alpha-output-80.json')
-drawAllPlots('results/beta-output-32.json')
-drawAllPlots('results/beta-output-80.json')
-drawAllPlots('results/m-output-32.json')
-drawAllPlots('results/m-output-80.json')
-drawAllPlots('results/p_random-output-32.json')
-drawAllPlots('results/p_random-output-80.json')
-drawAllPlots('results/rho-output-32.json')
-drawAllPlots('results/rho-output-80.json')
-drawAllPlots('results/T-output-32.json')
-drawAllPlots('results/T-output-80.json')
+def drawBestMap():
+    files_names = [
+        ['results/STATS-32.json', 'data/A-n32-k5.txt'],
+        ['results/STATS-80.json', 'data/A-n80-k10.txt']
+    ]
+    for filename,filename2 in files_names:
+        with open(filename, 'r') as file:
+            stats_data = json.load(file)
+        data = pd.read_csv(
+            filename2,
+            sep=r'\s+',
+            header=None,
+            names=['attractionID', 'X', 'Y'],
+            comment='['
+        )
+
+results_file_names = [
+    'results/alpha-output-32.json',
+    'results/alpha-output-80.json',
+    'results/beta-output-32.json',
+    'results/beta-output-80.json',
+    'results/m-output-32.json',
+    'results/m-output-80.json',
+    'results/p_random-output-32.json',
+    'results/p_random-output-80.json',
+    'results/rho-output-32.json',
+    'results/rho-output-80.json',
+    'results/T-output-32.json',
+    'results/T-output-80.json'
+]
+
+drawAllPlots(results_file_names)

@@ -105,14 +105,15 @@ stats_json = []
 data, attractions_nr = menu()
 
 for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
-    print(f'------------------------------------------------------------------------\n'
+    print(f'----------------------------------------------------------------------------------\n'
           f'          Badanie wpływu parametru: {param}: ({param} = {VALUES[param]})  '
-          f'\n------------------------------------------------------------------------')
+          f'\n----------------------------------------------------------------------------------')
 
     all_results_json = []
     for p in range(0, len(VALUES[param])):
         PARAMS[param] = VALUES[param][p]
-        bests = []
+        bests = []  # elementy tablicy to: najlepsza dlugosc tras z 5 iteracji dla kazdego zestawu parametrow
+        bests_tour = []  # elementy tablicy to: najlepsza trasa z 5 iteracji dla kazdego zestawu parametrow
         current_params_results = []
         stats = []
 
@@ -139,6 +140,7 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
             end_time = time.time()
             duration = end_time - start_time
             bests.append(best_track)
+            bests_tour.append(best_tour)
             results = {
                     'itteration_nr': i,
                     'parameters': {
@@ -157,22 +159,26 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
             }
             print(f'Iteracja nr. {i}, najkrótsza trasa: {best_track}, czas wykonania: {duration}')
             current_params_results.append(results)
-            statistics = {
-                'parameters': {
-                    'm': PARAMS['m'],
-                    'p_random': PARAMS['p_random'],
-                    'T': PARAMS['T'],
-                    'alpha': PARAMS['alpha'],
-                    'beta': PARAMS['beta'],
-                    'rho': PARAMS['rho']
-                },
-                'min': np.min(bests),
-                'max': np.max(bests),
-                'mean': np.mean(bests),
-                'median': np.median(bests),
-                'std': np.std(bests)
-            }
-            stats.append(statistics)
+
+        best_track_index = np.argmin(bests)
+        overall_best_tour = bests_tour[best_track_index]
+        statistics = {
+            'parameters': {
+                'm': PARAMS['m'],
+                'p_random': PARAMS['p_random'],
+                'T': PARAMS['T'],
+                'alpha': PARAMS['alpha'],
+                'beta': PARAMS['beta'],
+                'rho': PARAMS['rho']
+            },
+            'min': np.min(bests),
+            'max': np.max(bests),
+            'mean': np.mean(bests),
+            'median': np.median(bests),
+            'std': np.std(bests),
+            'best_tour': overall_best_tour
+        }
+        stats.append(statistics)
 
 
         all_results_json.extend(current_params_results)
