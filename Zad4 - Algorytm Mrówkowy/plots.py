@@ -1,3 +1,4 @@
+from adjustText import adjust_text
 import json
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -82,9 +83,7 @@ def timePlot(filename):
         })
     df = pd.DataFrame(results_list)
 
-    summary_df = df.groupby(param).agg(
-        mean_duration=('duration', 'mean')
-    ).reset_index()
+    summary_df = df.groupby(param).agg(mean_duration=('duration', 'mean')).reset_index()
     summary_df = summary_df.sort_values(by=param)
     param_labels = [f"{param} = {p}" for p in summary_df[param].unique()]
     value_col = 'mean_duration'
@@ -101,29 +100,68 @@ def timePlot(filename):
     plt.show()
 
 
-def drawAllPlots(results_file_names, stats_files):
-    for filename in results_file_names:
-        boxPlot(filename)
-        meanPlot(filename)
-        timePlot(filename)
-    drawBestMap()
-
-
-def drawBestMap():
+def drawBestMaps():
     files_names = [
-        ['results/STATS-32.json', 'data/A-n32-k5.txt'],
-        ['results/STATS-80.json', 'data/A-n80-k10.txt']
+        ['results/STATS-32.json', 'data/A-n32-k5.txt', 'A-n32-k5.txt'],
+        ['results/STATS-80.json', 'data/A-n80-k10.txt', 'A-n80-k10.txt']
     ]
-    for filename,filename2 in files_names:
-        with open(filename, 'r') as file:
+
+    for stats_filename, coords_filename, map_title in files_names:
+        with open(stats_filename, 'r') as file:
             stats_data = json.load(file)
-        data = pd.read_csv(
-            filename2,
+
+        coords = pd.read_csv(
+            coords_filename,
             sep=r'\s+',
             header=None,
             names=['attractionID', 'X', 'Y'],
             comment='['
         )
+        best = float('inf')
+        best_tour = []
+        best_params = {}
+
+        for stat in stats_data:
+            if stat['min'] < best:
+                best = stat['min']
+                best_tour = stat['best_tour']
+                best_params = stat['parameters']
+
+        tour_X = [coords['X'][i] for i in best_tour]
+        tour_Y = [coords['Y'][i] for i in best_tour]
+        plt.figure(figsize=(10, 8))
+        plt.scatter(coords['X'], coords['Y'], color='orange', s=50, label='Atrakcje')
+        texts = []  # Utwórz listę na obiekty tekstowe
+        for index, row in coords.iterrows():
+            texts.append(plt.text(row['X'], row['Y'], row['attractionID'], fontsize=9))
+        adjust_text(texts, arrowprops=dict(arrowstyle="-", color='k', lw=0.5)) #dopasowanie tekstu żeby się nie pokrywały numery atrakcji
+
+        plt.plot(tour_X, tour_Y, color='orange', linestyle='-', linewidth=2, label=f'Najlepsza trasa (Długość: {best:.2f})')
+
+        plt.plot(tour_X[0], tour_Y[0], 'o', markersize=10, color='lightgreen', label='Start')
+
+        plt.title(f'Najlepsza trasa dla pliku: {map_title}.txt'
+                        f'\n Długość trasy: {best:.2f} '
+                        f'\n (m = {best_params['m']}, '
+                        f'p_random = {best_params['p_random']}, '
+                        f'T = {best_params['T']}, '
+                        f'alpha = {best_params['alpha']}, '
+                        f'beta = {best_params['beta']}, '
+                        f'rho = {best_params['rho']})', fontsize=14)
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.legend()
+        plt.grid(True, linestyle='--', alpha=0.6)
+        plt.show()
+
+
+
+def drawAllPlots(results_file_names):
+    for filename in results_file_names:
+        boxPlot(filename)
+        meanPlot(filename)
+        timePlot(filename)
+    drawBestMaps()
 
 results_file_names = [
     'results/alpha-output-32.json',
