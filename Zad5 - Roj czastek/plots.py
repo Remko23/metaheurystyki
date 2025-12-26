@@ -222,6 +222,44 @@ def best_value_poznawcza(data):
     plt.show()
 
 
+def best_iter_T(data):
+    grouped_by_T = defaultdict(list)
+    for i in data:
+        grouped_by_T[i['iteracje']].append(i['last_improvement_iteration'])
+
+    T_keys = sorted(grouped_by_T.keys())
+
+    means = []
+
+    for n in T_keys:
+        m = np.mean(grouped_by_T[n])
+        means.append(m)
+
+    rows = []
+    for T, times in grouped_by_T.items():
+        rows.append({
+            'T': T,
+            'mean_time': np.mean(times)
+        })
+
+    df = pd.DataFrame(rows)
+
+    plt.figure(figsize=(10,8))
+    sns.barplot(data = df, x = 'T', y = 'mean_time', errorbar=None, palette='crest')
+    y_min = df['mean_time'].min()
+    y_max = df['mean_time'].max()
+    margin = (y_max - y_min) * 0.1
+    plt.ylim(y_min - margin, y_max + margin)
+    plt.xlabel("Liczba iteracji T")
+    plt.ylabel("Ilosc iteracji")
+    plt.title("Srednia ilosc iteracji potrzebna do znalezienia najlepszego rozwiazania")
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
+
+
+
 data1 = readfile('choice1.json')
 data2 = readfile('choice2.json')
 
@@ -231,6 +269,7 @@ best_value_N(data1)
 best_value_T(data1)
 best_value_inercja(data1)
 best_value_poznawcza(data1)
+best_iter_T(data1)
 
 time_N(data2)
 time_T(data2)
@@ -238,6 +277,7 @@ best_value_N(data2)
 best_value_T(data2)
 best_value_inercja(data2)
 best_value_poznawcza(data2)
+best_iter_T(data2)
 
 
 grouped1 = groups(data1, ['N', 'inercja', 'poznawcza', 'spoleczna', 'iteracje'])
