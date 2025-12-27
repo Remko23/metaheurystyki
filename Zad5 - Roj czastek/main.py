@@ -13,7 +13,12 @@ class Simulation:
         self.N = N
         self.T = T
 
-        self.roj = [czastka.Czastka(inercja, poznawcza, spoleczna) for _ in range(self.N)]
+        if self.choice == 1:
+            self.roj = [czastka.Czastka(inercja, poznawcza, spoleczna, 5) for _ in range(self.N)]
+        elif self.choice == 2:
+            self.roj = [czastka.Czastka(inercja, poznawcza, spoleczna, 10) for _ in range(self.N)]
+
+
 
     '''Pojedyncza symulacja. Zwraca parametry do dalszej analizy'''
     def simulate(self):

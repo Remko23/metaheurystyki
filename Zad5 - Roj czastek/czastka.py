@@ -3,9 +3,9 @@ import math
 
 
 class Czastka:
-    def __init__(self, inercja, poznawcza, spoleczna):
-        self.x = random.uniform(-20, 20)
-        self.y = random.uniform(-20, 20)
+    def __init__(self, inercja, poznawcza, spoleczna, zakres):
+        self.x = random.uniform(-zakres, zakres )
+        self.y = random.uniform(-zakres, zakres )
         self.inercja = inercja
         self.poznawcza = poznawcza
         self.spoleczna = spoleczna
