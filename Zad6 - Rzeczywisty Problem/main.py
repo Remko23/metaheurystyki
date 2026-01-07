@@ -72,24 +72,24 @@ def pheromoneUpdate(colony, matrix, rho):
     return matrix
 
 
-def colonyUpdate(colony):
+def colonyUpdate(colony, matrix, demands, ready_times, due_dates, service_times):
     for ant in colony:
-        ant.updateAnt()
+        ant.updateAnt(matrix, demands, ready_times, due_dates, service_times)
 
 # wartosci parametrow
 VALUES = {
-    'm': [10, 20, 50, 100],
-    'p_random': [0.01, 0.0, 0.1, 0.3],
-    'T': [100, 10, 200, 500],
-    'rho': [0.1, 0.3, 0.5, 0.8],
-    'alpha': [2.0, 0.5, 1.0, 5.0],
-    'beta': [1.0, 2.0, 4.0, 10.0]
+    'm': [20, 50, 100],
+    'p_random': [0.01, 0.0, 0.1],
+    'T': [100, 50, 200],
+    'rho': [0.1, 0.3, 0.5],
+    'alpha': [2.0, 0.5, 1.0],
+    'beta': [1.0, 2.0, 4.0]
 }
 
 PARAMS = {
-    'm': VALUES['m'][0],                #domyslnie: 10
+    'm': VALUES['m'][0],                #domyslnie: 20
     'p_random': VALUES['p_random'][0],  #domyslnie: 0.01
-    'T': VALUES['T'][0],                #domyslnie: 200
+    'T': VALUES['T'][0],                #domyslnie: 100
     'rho': VALUES['rho'][0],            #domyslnie: 0.1
     'alpha': VALUES['alpha'][0],        #domyslnie: 2.0
     'beta': VALUES['beta'][0]           #domyslnie: 1.0
@@ -99,7 +99,12 @@ PARAMS = {
 stats_json = []
 
 data, vehicles_capacity = menu()
-clients_nr = 100 #(w danych wiersz o id 0 to depot)
+demands = data['DEMAND'].values
+ready_times = data['READY_TIME'].values
+due_dates = data['DUE_DATE'].values
+service_times = data['SERVICE_TIME'].values
+
+clients_nr = 100 #(w danych wiersz o id 0 to depozyt)
 vehicles_nr = 25
 
 for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
@@ -117,21 +122,22 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
 
         print(f'PARAMS: {PARAMS}')
         for i in range(1,6):
+            print(f'Iteracja nr. {i}')
             start_time = time.time()
             colony, matrix = initializeAntColony(PARAMS['m'], vehicles_capacity, data)
 
             for j in range (1, PARAMS['T']+1):
                 for ant in colony:
                     while ant.unvisited:
-                        available = ant.getAvailibleCustomers(matrix, data)
+                        available = ant.getAvailibleCustomers(matrix, demands, ready_times, due_dates, service_times)
                         if available:
-                            ant.nextPlace(matrix, PARAMS['p_random'], PARAMS['alpha'], PARAMS['beta'], data)
+                            ant.nextPlace(matrix, PARAMS['p_random'], PARAMS['alpha'], PARAMS['beta'], demands, ready_times, due_dates, service_times)
                         else:
                             ant.returnToDepot(matrix)
                     if ant.tour[-1] != 0:
                         ant.returnToDepot(matrix)
                 matrix = pheromoneUpdate(colony, matrix, PARAMS['rho'])
-                colonyUpdate(colony)
+                colonyUpdate(colony, matrix, demands, ready_times, due_dates, service_times)
 
             best_track = float('inf')
             best_tour = []
@@ -140,7 +146,7 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
                 ant_bests.append(ant.best_track_length)
                 if ant.best_track_length < best_track:
                     best_track = ant.best_track_length
-                    best_tour = ant.best_tour
+                    best_tour = ant.best_solution
             end_time = time.time()
             duration = end_time - start_time
             bests.append(best_track)
