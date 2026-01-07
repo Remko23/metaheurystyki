@@ -102,7 +102,6 @@ class Ant:
         if len(self.unvisited) > 0: #mrowce nie udalo sie odwiedzic wszystkich klientow
             self.track_length = float('inf')
         else:
-            self.twoOpt(matrix, demands, ready_times, due_dates, service_times)
             if self.best_track_length is None or self.track_length < self.best_track_length:
                 self.best_track_length = self.track_length
                 self.best_solution = list(self.solution)

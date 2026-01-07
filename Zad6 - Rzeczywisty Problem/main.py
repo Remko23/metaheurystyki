@@ -78,12 +78,12 @@ def colonyUpdate(colony, matrix, demands, ready_times, due_dates, service_times)
 
 # wartosci parametrow
 VALUES = {
-    'm': [20, 50, 100],
+    'm': [25, 10, 50],
     'p_random': [0.01, 0.0, 0.1],
-    'T': [100, 50, 200],
-    'rho': [0.1, 0.3, 0.5],
-    'alpha': [2.0, 0.5, 1.0],
-    'beta': [1.0, 2.0, 4.0]
+    'T': [100, 50, 75],
+    'rho': [0.1, 0.05, 0.15],
+    'alpha': [2.0, 1.5, 2.5],
+    'beta': [2.0, 1.5, 2.5]
 }
 
 PARAMS = {
@@ -92,7 +92,7 @@ PARAMS = {
     'T': VALUES['T'][0],                #domyslnie: 100
     'rho': VALUES['rho'][0],            #domyslnie: 0.1
     'alpha': VALUES['alpha'][0],        #domyslnie: 2.0
-    'beta': VALUES['beta'][0]           #domyslnie: 1.0
+    'beta': VALUES['beta'][0]           #domyslnie: 2.0
 }
 
 
@@ -127,6 +127,9 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
             colony, matrix = initializeAntColony(PARAMS['m'], vehicles_capacity, data)
 
             for j in range (1, PARAMS['T']+1):
+                best_ant = None
+                min_distance = float('inf')
+
                 for ant in colony:
                     while ant.unvisited:
                         available = ant.getAvailibleCustomers(matrix, demands, ready_times, due_dates, service_times)
@@ -136,6 +139,14 @@ for param in ['m', 'p_random', 'alpha', 'beta', 'T', 'rho']:
                             ant.returnToDepot(matrix)
                     if ant.tour[-1] != 0:
                         ant.returnToDepot(matrix)
+
+                    if ant.track_length < min_distance:
+                        min_distance = ant.track_length
+                        best_ant = ant
+
+                # wykonujemy 2-opt TYLKo na najlepszej mrówce aby przyspieszyc algorytm
+                if best_ant and best_ant.track_length != float('inf'):
+                    best_ant.twoOpt(matrix, demands, ready_times, due_dates, service_times)
                 matrix = pheromoneUpdate(colony, matrix, PARAMS['rho'])
                 colonyUpdate(colony, matrix, demands, ready_times, due_dates, service_times)
 
