@@ -62,9 +62,7 @@ class Ant:
         #wybór względem śladu feromonów i heurystyki odległości
         else:
 
-            places = list(self.unvisited)
             chances = []
-
             # dodaje malutki epsilon żeby uniknąć dzielenia przez 0 jako, że w jednym z plików dwie atrakcje są w tym samym miejscu
             eps = 0.0000000001
             for j in available:
@@ -86,6 +84,8 @@ class Ant:
         self.tour.append(next)
         self.unvisited.remove(next)
 
+
+    '''Funkcja implementująca powrót do depozytu'''
     def returnToDepot(self, matrix):
         i = self.tour[-1]
         distance = matrix[0][i]
